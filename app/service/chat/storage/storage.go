@@ -7,10 +7,10 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/saromanov/grpc-chat/app/service/models"
+	"github.com/saromanov/grpc-chat/app/service/chat/models"
 )
 
-// storage implements db handling with Postgesql
+// Storage implements db handling with Postgesql
 type Storage struct {
 	db *gorm.DB
 }
