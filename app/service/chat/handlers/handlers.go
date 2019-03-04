@@ -20,13 +20,14 @@ func New(serverInstance *grpc.Server, chatController chat.Controller) {
 		ChatController: chatController,
 	}
 
-	chatPB.RegisterChatServer(serverInstance, server)
+	chat.RegisterChatServer(serverInstance, server)
 }
 
-func (server *ChatServer) AddMessage(req *chat.Message, res *chat.MessageResponse) error {
-	return nil
+func (s *ChatServer) AddMessage(req *chat.Message, res *chat.MessageResponse) error {
+	username := getUsernameFromContext(ctx)
+	server.ChatController.SendMessage(username, req)
+	return new(chatPB.SendMessageResponse), nil
 }
 
-func (server *ChatServer) SendMessage(ctx context.Context, req *chatPB.ClientMessage) (*chatPB.SendMessageResponse, error) {
-	return nil
+func (s *ChatServer) SerchMessages(ctx context.Context, req *chat.ClientMessage) (*chatPB.SendMessageResponse, error) {
 }
