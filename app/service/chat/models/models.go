@@ -5,15 +5,20 @@ import "github.com/saromanov/grpc-chat/proto/chat"
 
 // Message defines struct for messaging
 type Message struct {
-	ID string
+	ID   string
 	Body string
+	User string
+}
+
+// SearchMessages provides searching of messages
+type SearchMessages struct {
 	User string
 }
 
 // ToProto provides converting of the message to
 // protobuf representation
-func (m *Message) ToProto()*chat.Message {
-	return &chat.Message {
+func (m *Message) ToProto() *chat.Message {
+	return &chat.Message{
 		Body: m.Body,
 		User: m.User,
 	}

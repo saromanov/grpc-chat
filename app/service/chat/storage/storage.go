@@ -44,8 +44,8 @@ func (s *storage) Insert(m *models.Message) error {
 }
 
 // Insert provides finding data
-func (s *storage) Search(sr *st.SearchRequest) ([]*st.LogRequest, error) {
-	var response []*st.LogRequest
+func (s *storage) Search(sr *models.SearchRequest) ([]*models.Message, error) {
+	var response []*models.Message
 	err := s.makeQuery(s.db, sr).Find(&response).Error
 	if err != nil {
 		return nil, fmt.Errorf("storage: unable to find data: %v", err)
@@ -54,12 +54,9 @@ func (s *storage) Search(sr *st.SearchRequest) ([]*st.LogRequest, error) {
 }
 
 // makeQuery provides making of the query to Postgresql
-func (s *storage) makeQuery(db *gorm.DB, sr *st.SearchRequest) *gorm.DB {
-	if sr.FromTimestamp != 0 && sr.ToTimestamp != 0 {
-		db = db.Where("timestamp BETWEEN ? AND ?", sr.FromTimestamp, sr.ToTimestamp)
-	}
-	if sr.Name != "" {
-		db = db.Where("name=?", sr.Name)
+func (s *storage) makeQuery(db *gorm.DB, sr *modles.SearchRequest) *gorm.DB {
+	if sr.User != "" {
+		db = db.Where("user=?", sr.User)
 		return db
 	}
 	return db
