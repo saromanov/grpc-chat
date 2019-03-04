@@ -2,8 +2,8 @@ syntax = "proto3";
 package chat;
 
 service Chat {
-    rpc AddMessage(Message) retruns (MessageResponse);
-    rpc SearchMessages(SearchMessagesRequest) retruns (MessagesResponse)
+    rpc AddMessage(Message) returns (MessageResponse);
+    rpc SearchMessages(SearchMessagesRequest) returns (MessagesResponse);
 }
 
 message Message {
@@ -14,6 +14,10 @@ message Message {
 
 message MessageResponse {
     string id = 1;
+}
+
+message SearchMessagesRequest {
+    string user = 1;
 }
 
 message MessagesResponse {}
