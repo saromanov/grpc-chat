@@ -1,0 +1,19 @@
+syntax = "proto3";
+package chat;
+
+service Chat {
+    rpc AddMessage(Message) retruns (MessageResponse);
+    rpc SearchMessages(SearchMessagesRequest) retruns (MessagesResponse)
+}
+
+message Message {
+    string body = 1;
+    string user = 2;
+    int64 timestamp = 3;
+}
+
+message MessageResponse {
+    string id = 1;
+}
+
+message MessagesResponse {}
