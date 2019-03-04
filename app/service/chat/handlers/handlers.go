@@ -1,11 +1,8 @@
 // Package handlers defines handling of messages via gRPC
 package handlers
 
-package delivery
-
 import (
 	"errors"
-	"github.com/saromanov/grpc-chat"
 	"github.com/saromanov/grpc-chat/proto/chat"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -29,11 +26,14 @@ func New(server *grpc.Server, chatController chat.Controller) error {
 	return nil
 }
 
+// AddMessage provides adding of the new message to db
 func (s *ChatServer) AddMessage(req *chat.Message, res *chat.MessageResponse) error {
 	username := getUsernameFromContext(ctx)
 	server.ChatController.SendMessage(username, req)
 	return new(chatPB.SendMessageResponse), nil
 }
 
-func (s *ChatServer) SerchMessages(ctx context.Context, req *chat.ClientMessage) (*chatPB.SendMessageResponse, error) {
+// SearchMessages provides searching of the messages
+func (s *ChatServer) SearchMessages(ctx context.Context, req *chat.ClientMessage) (*chat.SendMessageResponse, error) {
+	return nil, nil
 }
