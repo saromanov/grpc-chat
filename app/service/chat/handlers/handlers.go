@@ -4,13 +4,14 @@ package handlers
 import (
 	"errors"
 	"github.com/saromanov/grpc-chat/proto/chat"
+	"github.com/saromanov/grpc-chat/app/service/chat/controller"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
 
 // ChatServer defines struct for chat server handling
 type ChatServer struct {
-	ChatController chat.Controller
+	cont controller.Controller
 }
 
 // New provides initialization of the gRPC handler
@@ -29,7 +30,9 @@ func New(server *grpc.Server, chatController chat.Controller) error {
 // AddMessage provides adding of the new message to db
 func (s *ChatServer) AddMessage(req *chat.Message, res *chat.MessageResponse) error {
 	username := getUsernameFromContext(ctx)
-	server.ChatController.SendMessage(username, req)
+	if err := s.cont.SendMessage(username, req); err != nil {
+		return err
+	}
 	return new(chatPB.SendMessageResponse), nil
 }
 
