@@ -29,11 +29,22 @@ func New(conf *config.Config) (*Controller, error) {
 }
 
 // SendMessage provides inserting of the new message
-func (c *Controller) SendMesage(req *chat.Message) error {
+func (c *Controller) SendMessage(req *chat.Message) error {
 	m := &models.Message{
 		Body: req.Body,
 		User: req.User,
 	}
 
 	return c.st.Insert(m)
+}
+
+// SearchMessages provides searching of the messages
+func (c *Controller) SearchMessages(req *chat.SearchMessagesRequest) ([]*models.Message, error) {
+	resp, err := c.st.Search(&models.SearchRequest{
+		User: req.User,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to find data")
+	}
+	return resp, nil
 }
