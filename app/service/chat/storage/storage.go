@@ -20,7 +20,7 @@ func New(s *structs.Config) (st.Storage, error) {
 	if s == nil {
 		return nil, errors.New("config is not defined")
 	}
-	args := "dbname=selitra"
+	args := "dbname=grcchat"
 	if s.DBName != "" && s.DBPassword != "" && s.DBUser != "" {
 		args += fmt.Sprintf(" user=%s dbname=%s password=%s", s.DBUser, s.DBName, s.DBPassword)
 	}
