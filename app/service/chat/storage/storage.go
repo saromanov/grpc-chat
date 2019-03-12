@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/saromanov/grpc-chat/app/service/chat/models"
+	"github.com/saromanov/grpc-chat/app/service/config"
 )
 
 // Storage implements db handling with Postgesql
@@ -16,7 +17,7 @@ type Storage struct {
 }
 
 // New provides init for postgesql storage
-func New(s *structs.Config) (st.Storage, error) {
+func New(s *config.Config) (*Storage, error) {
 	if s == nil {
 		return nil, errors.New("config is not defined")
 	}
@@ -28,14 +29,14 @@ func New(s *structs.Config) (st.Storage, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to open db: %v", err)
 	}
-	db.AutoMigrate(&st.LogRequest{})
-	return &storage{
+	db.AutoMigrate(&models.Message{})
+	return &Storage{
 		db: db,
 	}, nil
 }
 
 // Insert provides inserting of data
-func (s *storage) Insert(m *models.Message) error {
+func (s *Storage) Insert(m *models.Message) error {
 	err := s.db.Create(m).Error
 	if err != nil {
 		return fmt.Errorf("storage: unable to insert data: %v", err)
@@ -43,8 +44,8 @@ func (s *storage) Insert(m *models.Message) error {
 	return nil
 }
 
-// Insert provides finding data
-func (s *storage) Search(sr *models.SearchRequest) ([]*models.Message, error) {
+// Search provides finding data
+func (s *Storage) Search(sr *models.SearchMessages) ([]*models.Message, error) {
 	var response []*models.Message
 	err := s.makeQuery(s.db, sr).Find(&response).Error
 	if err != nil {
@@ -54,7 +55,7 @@ func (s *storage) Search(sr *models.SearchRequest) ([]*models.Message, error) {
 }
 
 // makeQuery provides making of the query to Postgresql
-func (s *storage) makeQuery(db *gorm.DB, sr *modles.SearchRequest) *gorm.DB {
+func (s *Storage) makeQuery(db *gorm.DB, sr *models.SearchMessages) *gorm.DB {
 	if sr.User != "" {
 		db = db.Where("user=?", sr.User)
 		return db
@@ -63,6 +64,6 @@ func (s *storage) makeQuery(db *gorm.DB, sr *modles.SearchRequest) *gorm.DB {
 }
 
 // Close provides closing of db
-func (s *storage) Close() error {
+func (s *Storage) Close() error {
 	return s.db.Close()
 }

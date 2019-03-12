@@ -22,10 +22,10 @@ func New(conf *config.Config) (*Controller, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to init controller")
 	}
-	return nil, &Controller{
+	return &Controller{
 		st:   st,
 		conf: conf,
-	}
+	}, nil
 }
 
 // SendMessage provides inserting of the new message
@@ -40,7 +40,7 @@ func (c *Controller) SendMessage(req *chat.Message) error {
 
 // SearchMessages provides searching of the messages
 func (c *Controller) SearchMessages(req *chat.SearchMessagesRequest) ([]*models.Message, error) {
-	resp, err := c.st.Search(&models.SearchRequest{
+	resp, err := c.st.Search(&models.SearchMessages{
 		User: req.User,
 	})
 	if err != nil {
