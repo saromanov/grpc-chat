@@ -32,7 +32,7 @@ func main() {
 	}
 	defer lis.Close()
 
-	err = service.New(nil, lis)
+	_, err = service.New(nil, lis)
 	if err != nil {
 		panic(err)
 	}

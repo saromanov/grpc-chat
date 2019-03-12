@@ -2,9 +2,11 @@
 package service
 
 import (
+	"fmt"
 	"net"
 
 	"github.com/pkg/errors"
+	"github.com/saromanov/grpc-chat/app/service/chat/controller"
 	"github.com/saromanov/grpc-chat/app/service/chat/handlers"
 	"github.com/saromanov/grpc-chat/app/service/chat/storage"
 	"github.com/saromanov/grpc-chat/app/service/config"
@@ -17,9 +19,9 @@ func New(conf *config.Config, lis net.Listener) (chan bool, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to init storage")
 	}
-
+	fmt.Println(st)
 	grpcServer := grpc.NewServer()
-	err = handlers.New(grpcServer, nil)
+	err = handlers.New(grpcServer, controller.Controller{})
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to init handler")
 	}
