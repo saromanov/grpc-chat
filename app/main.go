@@ -1,14 +1,17 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net"
-	"flag"
+
 	"github.com/saromanov/grpc-chat/app/service"
 	"github.com/saromanov/grpc-chat/app/service/config"
 	"gopkg.in/yaml.v2"
 )
+
+const defaultPort = 14200
 
 var configFile = flag.String("config", "", "config file")
 
@@ -27,12 +30,27 @@ func parseConfig(path string) (*config.Config, error) {
 	return c, nil
 }
 
+// makePort provides making of the port into string representation
+func makePort(port int) string {
+	return fmt.Sprintf(":%d", port)
+}
+
 func main() {
 	flag.Parse()
 	if *configFile == "" {
 		panic("config file is not defined")
 	}
-	lis, err := net.Listen("tcp", ":14200")
+
+	conf, err := parseConfig(*configFile)
+	if err != nil {
+		panic(err)
+	}
+
+	port := makePort(defaultPort)
+	if conf.Port != 0 {
+		port = makePort(conf.Port)
+	}
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		panic("unable to listen: %v")
 	}
