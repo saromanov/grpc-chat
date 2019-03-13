@@ -30,6 +30,24 @@ func parseConfig(path string) (*config.Config, error) {
 	return c, nil
 }
 
+// makeService provides making of the service
+func makeService(conf *config.Config) {
+	port := makePort(defaultPort)
+	if conf.Port != 0 {
+		port = makePort(conf.Port)
+	}
+	lis, err := net.Listen("tcp", port)
+	if err != nil {
+		panic("unable to listen: %v")
+	}
+	defer lis.Close()
+
+	_, err = service.New(nil, lis)
+	if err != nil {
+		panic(err)
+	}
+}
+
 // makePort provides making of the port into string representation
 func makePort(port int) string {
 	return fmt.Sprintf(":%d", port)
@@ -46,18 +64,5 @@ func main() {
 		panic(err)
 	}
 
-	port := makePort(defaultPort)
-	if conf.Port != 0 {
-		port = makePort(conf.Port)
-	}
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		panic("unable to listen: %v")
-	}
-	defer lis.Close()
-
-	_, err = service.New(nil, lis)
-	if err != nil {
-		panic(err)
-	}
+	makeService(conf)
 }
