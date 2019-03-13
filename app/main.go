@@ -42,10 +42,11 @@ func makeService(conf *config.Config) {
 	}
 	defer lis.Close()
 
-	_, err = service.New(nil, lis)
+	res, err := service.New(conf, lis)
 	if err != nil {
 		panic(err)
 	}
+	<-res
 }
 
 // makePort provides making of the port into string representation
