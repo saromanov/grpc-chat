@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
-
+	"flag"
 	"github.com/saromanov/grpc-chat/app/service"
 	"github.com/saromanov/grpc-chat/app/service/config"
 	"gopkg.in/yaml.v2"
 )
+
+var configFile = flag.String("config", "", "config file")
 
 // parseConfig provides parsing of the config .yml file
 func parseConfig(path string) (*config.Config, error) {
@@ -26,6 +28,10 @@ func parseConfig(path string) (*config.Config, error) {
 }
 
 func main() {
+	flag.Parse()
+	if *configFile == "" {
+		panic("config file is not defined")
+	}
 	lis, err := net.Listen("tcp", ":14200")
 	if err != nil {
 		panic("unable to listen: %v")
